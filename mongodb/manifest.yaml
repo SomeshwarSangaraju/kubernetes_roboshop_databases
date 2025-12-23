@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: mongodb
+  name: mongodb-headless
   labels:
     project: roboshop
     component: mongodb
@@ -46,7 +46,7 @@ spec:
       project: roboshop
       component: mongodb
       tier: db # has to match .spec.template.metadata.labels
-  serviceName: "mongodb"
+  serviceName: "mongodb-headless" # this should be head less service name
   replicas: 3 # by default is 1
   minReadySeconds: 10 # by default is 0
   template:
@@ -61,11 +61,11 @@ spec:
       - name: mongodb
         image: someshwarsangaraju/mongodb:v1
         volumeMounts:
-        - name: www
-          mountPath: /usr/share/nginx/html
+        - name: mongodb
+          mountPath: /data/db
   volumeClaimTemplates:
   - metadata:
-      name: www
+      name: mongodb
     spec:
       accessModes: [ "ReadWriteOnce" ]
       storageClassName: "roboshop-ebs"
