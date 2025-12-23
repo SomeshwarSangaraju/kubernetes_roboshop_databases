@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mongodb-headless
+  namespace: roboshop
   labels:
     project: roboshop
     component: mongodb
@@ -22,6 +23,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mongodb
+  namespace: roboshop
   labels:
     project: roboshop
     component: mongodb
@@ -40,6 +42,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mongodb
+  namespace: roboshop
 spec:
   selector:
     matchLabels:
@@ -47,7 +50,7 @@ spec:
       component: mongodb
       tier: db # has to match .spec.template.metadata.labels
   serviceName: "mongodb-headless" # this should be head less service name
-  replicas: 3 # by default is 1
+  replicas: 1 # by default is 1
   minReadySeconds: 10 # by default is 0
   template:
     metadata:
