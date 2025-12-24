@@ -6,7 +6,7 @@ metadata:
 data:
   MONGO: "true"
   REDIS_URL: "redis://redis:6379"
-  MONGO_URL: "mongodb://mongodb:27017/users"
+  MONGO_URL: "mongobackend://mongobackend:27017/users"
 
 ---
 
@@ -20,7 +20,7 @@ spec:
     project: user
     component: user
     env: dev
-    tier: db
+    tier: backend
   ports: 
   - protocol: TCP
     port: 8080
@@ -37,7 +37,7 @@ metadata:
     project: user
     component: user
     env: dev
-    tier: db
+    tier: backend
 spec:
   replicas: 1
   selector:
@@ -46,7 +46,7 @@ spec:
       project: user
       component: user
       env: dev
-      tier: db
+      tier: backend
   # pod definition
   template:
     metadata:
@@ -54,7 +54,7 @@ spec:
         project: user
         component: user
         env: dev
-        tier: db
+        tier: backend
     spec:
       containers:
       - name: user
@@ -95,7 +95,7 @@ metadata:
     project: user
     component: user
     env: dev
-    tier: db
+    tier: backend
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

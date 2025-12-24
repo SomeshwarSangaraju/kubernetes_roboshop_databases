@@ -5,7 +5,7 @@ metadata:
   namespace: roboshop
 data:
   CART_ENDPOINT: "cart:8080"
-  DB_HOST: "mysql"
+  backend_HOST: "mysql"
 
 ---
 
@@ -19,7 +19,7 @@ spec:
     project: roboshop
     component: shipping
     env: dev
-    tier: db
+    tier: backend
   ports: 
   - protocol: TCP
     port: 8080
@@ -36,7 +36,7 @@ metadata:
     project: roboshop
     component: shipping
     env: dev
-    tier: db
+    tier: backend
 spec:
   replicas: 1
   selector:
@@ -45,7 +45,7 @@ spec:
       project: roboshop
       component: shipping
       env: dev
-      tier: db
+      tier: backend
   # pod definition
   template:
     metadata:
@@ -53,7 +53,7 @@ spec:
         project: roboshop
         component: shipping
         env: dev
-        tier: db
+        tier: backend
     spec:
       containers:
       - name: shipping
@@ -94,7 +94,7 @@ metadata:
     project: roboshop
     component: shipping
     env: dev
-    tier: db
+    tier: backend
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
