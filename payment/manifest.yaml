@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: shipping
+  name: payment
   namespace: roboshop
 data:
   CART_HOST: "cart"
@@ -17,12 +17,12 @@ data:
 apiVersion: v1
 kind: Service
 metadata: 
-  name: shipping
+  name: payment
   namespace: roboshop
 spec:
   selector:
     project: roboshop
-    component: shipping
+    component: payment
     env: dev
     tier: backend
   ports: 
@@ -34,12 +34,12 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: shipping
+  name: payment
   namespace: roboshop
   # these are replica set labels
   labels:
     project: roboshop
-    component: shipping
+    component: payment
     env: dev
     tier: backend
 spec:
@@ -48,7 +48,7 @@ spec:
     # these labels are used to select pods
     matchLabels:
       project: roboshop
-      component: shipping
+      component: payment
       env: dev
       tier: backend
   # pod definition
@@ -56,17 +56,17 @@ spec:
     metadata:
       labels:
         project: roboshop
-        component: shipping
+        component: payment
         env: dev
         tier: backend
     spec:
       containers:
-      - name: shipping
-        image: joindevops/shipping:v1
+      - name: payment
+        image: joindevops/payment:v1
         imagePullPolicy: Always
         envFrom:
         - configMapRef:
-            name: shipping
+            name: payment
         ports:
         - name: liveness-port
           containerPort: 8080
@@ -93,18 +93,18 @@ spec:
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: shipping
+  name: payment
   namespace: roboshop
   labels:
     project: roboshop
-    component: shipping
+    component: payment
     env: dev
     tier: backend
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: shipping
+    name: payment
   minReplicas: 1
   maxReplicas: 10
   metrics:
