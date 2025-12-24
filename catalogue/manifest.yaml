@@ -34,44 +34,42 @@ metadata:
     component: catalogue
     tier: backend
 spec:
-  selector:
+  replicas: 1
+  selector: 
     matchLabels:
       project: roboshop
       component: catalogue
       tier: backend
-  replicas: 1
   template:
     metadata:
       name: catalogue
+      labels:
+        project: roboshop
+        component: catalogue
+        tier: backend
     spec:
-      containers: 
+      containers:
       - name: catalogue
         image: someshwarsangaraju/catalogue:v1
-        envFrom:
-        - ConfigMapRef:
+        imagePullPolicy: Always
+        envFrom: 
+        - configMapRef:
             name: catalogue
+        ports:
+        - name: liveness-port
+          containerPort: 8080
         readinessProbe:
           httpGet:
-            port: 8080
             path: /health
+            port: liveness-port
           failureThreshold: 1
           periodSeconds: 15
-          initialDelaySeconds: 30
         livenessProbe:
-          httpGet: 
+          httpGet:
             path: /health
-            port: 8080
-          failureThreshold: 1
-          initialDelaySeconds: 30
+            port: liveness-port
+          failureThreshold: 11
           periodSeconds: 15
-        resources:
-          request:
-            cpu: "100m"
-            memory: "128Mi"
-          limits:
-            cpu: "300m"
-            memory: "456Mi"
-  
 ---
 
 apiVersion: autoscaling/v2
