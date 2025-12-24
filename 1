@@ -8,6 +8,7 @@ data:
     [mysqld]
     innodb_redo_log_capacity = 2G
 ---
+# service, headless service, statefulset, pvc
 apiVersion: v1
 kind: Service
 metadata:
@@ -19,11 +20,10 @@ spec:
     component: mysql
     tier: db
   ports:
-  - protocol: TCP
-    port: 3306
-    targetPort: 3306
+    - protocol: TCP
+      port: 3306 # service port
+      targetPort: 3306 # container port
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -36,28 +36,23 @@ spec:
     component: mysql
     tier: db
   ports:
-  - protocol: TCP
-    port: 3306
-    targetPort: 3306
+    - protocol: TCP
+      port: 3306 # service port
+      targetPort: 3306 # container port
 ---
-
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mysql
   namespace: roboshop
-  labels:
-    project: roboshop
-    component: mysql
-    tier: db
 spec:
   selector:
     matchLabels:
       project: roboshop
       component: mysql
       tier: db
-  replicas: 1
-  serviceName: mysql-headless
+  serviceName: "mysql-headless" # this should be head less service name
+  replicas: 2 # by default is 1
   template:
     metadata:
       labels:
@@ -67,17 +62,18 @@ spec:
     spec:
       containers:
       - name: mysql
-        image: someshwarsangaraju/mysql:v1
+        image: joindevops/mysql:v1
         volumeMounts:
-          - name: mysql
-            mountPath: /data/db
-          - name: mysql-config
-            mountPath: /etc/mysql/conf.d/my.cnf
-            subPath: my.cnf
+        - name: mysql
+          mountPath: /data/db
+        - name: mysql-config
+          mountPath: /etc/mysql/conf.d/my.cnf
+          subPath: my.cnf
       volumes:
         - name: mysql-config
           configMap:
             name: mysql
+  # This is PVC
   volumeClaimTemplates:
   - metadata:
       name: mysql
