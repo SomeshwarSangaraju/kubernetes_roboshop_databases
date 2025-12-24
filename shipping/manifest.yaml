@@ -110,4 +110,4 @@ spec:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: 70 # 70 is the real value
+        averageUtilization: 5 # 70 is the real value
