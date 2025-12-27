@@ -68,24 +68,6 @@ data:
         }
     }
 
----
-
-apiVersion: v1
-kind: Service
-metadata: 
-  name: frontend
-  namespace: roboshop
-spec:
-  type: LoadBalancer
-  selector:
-    project: roboshop
-    component: frontend
-    env: dev
-    tier: frontend
-  ports: 
-  - protocol: TCP
-    port: 80
-    targetPort: 8080
 
 ---
 apiVersion: apps/v1
@@ -151,6 +133,26 @@ spec:
       - name: nginx-config
         configMap:
           name: frontend
+
+---
+
+apiVersion: v1
+kind: Service
+metadata: 
+  name: frontend
+  namespace: roboshop
+spec:
+  type: LoadBalancer
+  selector:
+    project: roboshop
+    component: frontend
+    env: dev
+    tier: frontend
+  ports: 
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
