@@ -7,7 +7,6 @@ data:
   MONGO: "true"
   REDIS_URL: "redis://redis:6379"
   MONGO_URL: "mongodb://mongodb:27017/users"
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -18,7 +17,6 @@ metadata:
   labels:
     project: roboshop
     component: user
-    env: dev
     tier: backend
 spec:
   replicas: 1
@@ -27,7 +25,6 @@ spec:
     matchLabels:
       project: roboshop
       component: user
-      env: dev
       tier: backend
   # pod definition
   template:
@@ -35,12 +32,11 @@ spec:
       labels:
         project: roboshop
         component: user
-        env: dev
         tier: backend
     spec:
       containers:
       - name: user
-        image: someshwarsangaraju/user:v1
+        image: joindevops/user:v1
         imagePullPolicy: Always
         envFrom:
         - configMapRef:
@@ -50,11 +46,11 @@ spec:
           containerPort: 8080
         resources:
           requests:
-            cpu: "200m"
+            cpu: "100m"
             memory: "128Mi"
           limits:
-            cpu: "400m"
-            memory: "528Mi"
+            cpu: "100m"
+            memory: "128Mi"
         readinessProbe:
           httpGet:
             path: /health
@@ -67,24 +63,21 @@ spec:
             port: liveness-port
           failureThreshold: 1
           periodSeconds: 15
-
 ---
-
 apiVersion: v1
 kind: Service
-metadata: 
+metadata:
   name: user
   namespace: roboshop
 spec:
   selector:
     project: roboshop
     component: user
-    env: dev
     tier: backend
-  ports: 
-  - protocol: TCP
-    port: 8080
-    targetPort: 8080
+  ports:
+    - protocol: TCP
+      port: 8080 # service port
+      targetPort: 8080 # container port
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -94,7 +87,6 @@ metadata:
   labels:
     project: roboshop
     component: user
-    env: dev
     tier: backend
 spec:
   scaleTargetRef:
@@ -109,4 +101,4 @@ spec:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: 70 # 70 is the real value
+        averageUtilization: 5 # 70 is the real value
