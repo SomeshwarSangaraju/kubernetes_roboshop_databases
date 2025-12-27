@@ -43,6 +43,13 @@ spec:
         ports:
         - name: liveness-port
           containerPort: 8080
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "100m"
+            memory: "128Mi"
         readinessProbe:
           httpGet:
             path: /health
@@ -53,7 +60,7 @@ spec:
           httpGet:
             path: /health
             port: liveness-port
-          failureThreshold: 11
+          failureThreshold: 1
           periodSeconds: 15
 ---
 apiVersion: v1
@@ -70,8 +77,6 @@ spec:
   - protocol: TCP
     port: 8080
     targetPort: 8080
-
-
 
 ---
 apiVersion: autoscaling/v2
